@@ -47,6 +47,7 @@ import javax.annotation.Nonnull;
 import javax.net.ssl.SSLException;
 
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -83,11 +84,17 @@ public final class MixServer implements Runnable {
     public static void main(String[] args) {
         Options opts = getOptions();
         CommandLine cl = CommandLineUtils.parseOptions(args, opts);
+
+        if (cl.hasOption("help")) {
+            (new HelpFormatter()).printHelp("mixserv", opts);
+            return;
+        }
         new MixServer(cl).run();
     }
 
     static Options getOptions() {
         Options opts = new Options();
+        opts.addOption("h", "help", false, "Print the usage");
         opts.addOption("p", "port", true, "port number of the mix server [default: 11212]");
         opts.addOption("workers", "num_workers", true,
             "The number of MIX workers [default: max(1, round(procs * 1.5))] ");
